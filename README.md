@@ -119,7 +119,13 @@ au panier - un oubli, et le total affiché mentirait. En le calculant à la
 demande, il est toujours juste.
 
 Tout le reste (catalogue de produits, composants d'affichage, formulaire
-de code promo, bouton happy hour...) est **déjà fourni et câblé**. Ton
+de code promo, bouton happy hour...) est **déjà fourni et câblé**. C'est
+aussi le cas de `starter/src/reducer/cartLines.ts` (fonctions
+`addLine`/`incrementLine`/`decrementLine`/`removeLine`, qui manipulent le
+tableau `lines`) et de `starter/src/reducer/cartDiscount.ts` (fonction
+`applyDiscountCode`, qui cherche un code promo) : ces algorithmes sont
+fournis pour que TODO 2 se concentre sur le reducer lui-même - QUAND et
+COMMENT l'état change - pas sur la mécanique de recherche/tableau. Ton
 travail se concentre sur **3 fichiers**, dans cet ordre :
 
 ---
@@ -169,47 +175,45 @@ et `CartContext.tsx` : normal, ce sont les TODOs suivants.
 
 ## 🔹 TODO 2 · `src/reducer/cartReducer.ts` : écrire le reducer
 
-**~30 minutes**, le cœur de l'exercice.
+**~15-20 minutes**, le cœur de l'exercice.
 
 Le squelette est là : une fonction `cartReducer(state, action)` avec un
 `switch (action.type)` et un `case` vide (`return state;`) pour chacune
-des 7 actions. Trois règles à respecter partout (déjà rappelées en
-commentaire dans le fichier) :
+des 7 actions. Ce TODO n'est **volontairement pas** un exercice d'algo :
+`addLine`/`incrementLine`/`decrementLine`/`removeLine` (dans
+`cartLines.ts`) font déjà tout le travail de `.find()`/`.map()`/
+`.filter()` sur `lines`, et `applyDiscountCode` (dans `cartDiscount.ts`)
+fait déjà la recherche du code promo. Ta seule question, pour chaque
+`case` : **quel nouvel état l'action produit-elle ?**
+
+Trois règles à respecter partout (déjà rappelées en commentaire dans le
+fichier) :
 
 1. **Fonction pure** : pas de `fetch`, pas de `Math.random()`, pas de
    mutation d'une variable extérieure au reducer.
 2. **Immutabilité** : jamais `state.lines.push(...)` ni
-   `line.quantity++`. Toujours `{ ...state, ... }`, `.map()`, `.filter()`,
-   `[...state.lines, nouvelleLigne]`.
+   `line.quantity++`. Toujours `{ ...state, ... }`.
 3. **Action invalide → état inchangé** : un code promo qui n'existe pas
    dans `DISCOUNT_CODES` ne doit RIEN changer, pas planter.
 
 <details markdown="1">
-<summary>▸ Indice · ADD_ITEM et INCREMENT_ITEM</summary>
+<summary>▸ Indice · ADD_ITEM, INCREMENT_ITEM, DECREMENT_ITEM, REMOVE_ITEM</summary>
 
-Les deux se ressemblent : trouver la ligne concernée
-(`state.lines.find(...)` ou `.map(...)`), et soit incrémenter sa
-`quantity`, soit ajouter une toute nouvelle ligne si le produit n'était
-pas encore dans le panier. `Array.prototype.some()` ou `.find()` te
-disent si une ligne existe déjà.
-</details>
-
-<details markdown="1">
-<summary>▸ Indice · DECREMENT_ITEM</summary>
-
-Fais-le en deux étapes séparées (plus lisible qu'un seul `.reduce()`) :
-d'abord `.map()` pour décrémenter la bonne ligne, puis `.filter()` pour
-retirer les lignes dont `quantity` est tombée à `0`.
+Les quatre suivent exactement le même moule : appelle la fonction de
+`cartLines.ts` qui correspond (`addLine`, `incrementLine`,
+`decrementLine` ou `removeLine`) avec `state.lines` et le bon argument
+(`action.product` ou `action.productId`), et renvoie
+`{ ...state, lines: /* le résultat de l'appel */ }`.
 </details>
 
 <details markdown="1">
 <summary>▸ Indice · APPLY_DISCOUNT_CODE</summary>
 
-`DISCOUNT_CODES` (déjà importé en haut du fichier) est un
-`Record<string, number>`. Cherche `action.code` dedans (pense à
-normaliser la casse avec `.toUpperCase()`, pour que `etudiant10` et
-`ETUDIANT10` fonctionnent tous les deux). Si `DISCOUNT_CODES[code]` vaut
-`undefined`, retourne `state` sans y toucher.
+Même moule que les quatre précédents, avec `applyDiscountCode` (déjà
+importée en haut du fichier) : `applyDiscountCode(state, action.code)`.
+Différence à noter : elle renvoie directement l'état COMPLET (pas
+seulement `lines`), donc pas de `{ ...state, ... }` à écrire ici -
+retourne juste ce qu'elle te donne.
 </details>
 
 <details markdown="1">

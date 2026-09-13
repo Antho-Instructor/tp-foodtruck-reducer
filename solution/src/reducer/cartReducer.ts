@@ -1,5 +1,6 @@
 import type { CartState, CartAction } from "../types";
-import { DISCOUNT_CODES } from "../data/discountCodes";
+import { addLine, incrementLine, decrementLine, removeLine } from "./cartLines";
+import { applyDiscountCode } from "./cartDiscount";
 
 export const initialCartState: CartState = {
   lines: [],
@@ -10,6 +11,12 @@ export const initialCartState: CartState = {
 
 /**
  * Le reducer du panier : (state, action) => nouvel état.
+ *
+ * La manipulation du tableau `lines` (trouver une ligne, incrémenter,
+ * retirer à 0...) vit dans cartLines.ts, et la recherche du code promo
+ * dans cartDiscount.ts : ce reducer ne fait que décider, pour chaque
+ * action, QUEL nouvel état en résulte - c'est la vraie responsabilité
+ * d'un reducer, séparée des algorithmes qu'il orchestre.
  *
  * Règles à respecter partout dans cette fonction (elles sont ce qui fait
  * qu'un reducer est FIABLE et TESTABLE) :
@@ -27,76 +34,25 @@ export const initialCartState: CartState = {
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
-      const existingLine = state.lines.find(
-        (line) => line.product.id === action.product.id,
-      );
-
-      if (existingLine) {
-        // Le produit est déjà dans le panier : on incrémente sa quantité.
-        // .map() construit un TOUT NOUVEAU tableau ; on ne touche jamais
-        // à state.lines directement.
-        return {
-          ...state,
-          lines: state.lines.map((line) =>
-            line.product.id === action.product.id
-              ? { ...line, quantity: line.quantity + 1 }
-              : line,
-          ),
-        };
-      }
-
-      // Nouveau produit : on ajoute une nouvelle ligne à la fin.
-      return {
-        ...state,
-        lines: [...state.lines, { product: action.product, quantity: 1 }],
-      };
+      return { ...state, lines: addLine(state.lines, action.product) };
     }
 
     case "INCREMENT_ITEM": {
-      return {
-        ...state,
-        lines: state.lines.map((line) =>
-          line.product.id === action.productId
-            ? { ...line, quantity: line.quantity + 1 }
-            : line,
-        ),
-      };
+      return { ...state, lines: incrementLine(state.lines, action.productId) };
     }
 
     case "DECREMENT_ITEM": {
-      return {
-        ...state,
-        // On décrémente d'abord, puis on FILTRE les lignes tombées à 0 :
-        // deux étapes séparées, plus lisibles qu'un seul .reduce() alambiqué.
-        lines: state.lines
-          .map((line) =>
-            line.product.id === action.productId
-              ? { ...line, quantity: line.quantity - 1 }
-              : line,
-          )
-          .filter((line) => line.quantity > 0),
-      };
+      return { ...state, lines: decrementLine(state.lines, action.productId) };
     }
 
     case "REMOVE_ITEM": {
-      return {
-        ...state,
-        lines: state.lines.filter((line) => line.product.id !== action.productId),
-      };
+      return { ...state, lines: removeLine(state.lines, action.productId) };
     }
 
     case "APPLY_DISCOUNT_CODE": {
-      const normalizedCode = action.code.trim().toUpperCase();
-      const discountPercent = DISCOUNT_CODES[normalizedCode];
-
-      if (discountPercent === undefined) {
-        // Code inconnu : on NE FAIT RIEN. C'est au composant appelant
-        // (le formulaire) d'afficher un message d'erreur ; le reducer,
-        // lui, se contente de refuser une transition invalide.
-        return state;
-      }
-
-      return { ...state, discountCode: normalizedCode, discountPercent };
+      // applyDiscountCode gère elle-même le cas "code inconnu" en
+      // renvoyant `state` inchangé : le reducer n'a rien de plus à faire.
+      return applyDiscountCode(state, action.code);
     }
 
     case "TOGGLE_HAPPY_HOUR": {

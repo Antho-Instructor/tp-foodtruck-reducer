@@ -148,6 +148,16 @@ never;` actuel) :
 | `"TOGGLE_HAPPY_HOUR"`  | *(aucun)*                       | bouton "Happy Hour"                      |
 | `"RESET_CART"`         | *(aucun)*                       | bouton "Vider le panier"                 |
 
+⚠️ **Attention à un piège** : dans le cours (`useReducer.pdf`), l'action
+`"set"` du compteur transporte sa donnée dans un champ générique
+`payload` (`{ type: "set"; payload: number }`). Ici, chaque action a son
+**propre champ nommé** (`product`, `productId`, `code` - voir la colonne
+"Payload à transporter" ci-dessus), PAS un champ `payload`. Regarde
+`starter/src/components/ProductCard.tsx` : le `dispatch({ type:
+"ADD_ITEM", product })` déjà câblé te dit exactement quel nom de champ
+utiliser. Si tu tapes `payload` par réflexe, ton union ne collera pas
+avec les composants déjà fournis.
+
 <details markdown="1">
 <summary>▸ Indice : la syntaxe d'une union discriminée</summary>
 
@@ -162,8 +172,10 @@ type Action =
 ```
 
 Chaque ligne du tableau ci-dessus devient une variante de l'union, sur le
-même modèle. Une action "sans payload" (comme `"set"` ci-dessus n'en a
-pas d'exemple, mais `"increment"` oui) n'a que le champ `type`.
+même modèle (juste avec le nom de champ de la colonne "Payload à
+transporter" à la place de `payload`). Une action sans donnée à
+transporter (comme `"increment"` ou `"reset"` ci-dessus) n'a que le champ
+`type`.
 </details>
 
 **✅ Vérif.** `npm run build` dans `starter/` doit faire disparaître les

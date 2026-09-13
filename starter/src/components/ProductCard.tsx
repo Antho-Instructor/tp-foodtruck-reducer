@@ -15,6 +15,8 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <button
         type="button"
+        // Forme exacte attendue par CartAction["ADD_ITEM"] (voir types.ts) :
+        // le reducer lit `action.product`, pas `action.payload`.
         onClick={() => dispatch({ type: "ADD_ITEM", product })}
         className="rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-orange-600"
       >

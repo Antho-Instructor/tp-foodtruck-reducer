@@ -6,6 +6,8 @@ export function HappyHourToggle() {
   return (
     <button
       type="button"
+      // Action sans payload : le reducer se contente d'inverser
+      // state.happyHour, aucune donnée supplémentaire à transporter.
       onClick={() => dispatch({ type: "TOGGLE_HAPPY_HOUR" })}
       className={`w-full rounded-md px-3 py-2 text-sm font-semibold transition-colors ${
         state.happyHour

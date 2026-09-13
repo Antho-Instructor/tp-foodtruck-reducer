@@ -8,6 +8,8 @@ export function DiscountForm() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (code.trim() === "") return;
+    // Le formulaire dispatch le code TEL QUEL (sans normaliser la casse) :
+    // c'est au reducer de décider ce qui est valide, pas au composant.
     dispatch({ type: "APPLY_DISCOUNT_CODE", code });
     setCode("");
   }

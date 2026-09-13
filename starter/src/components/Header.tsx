@@ -1,3 +1,5 @@
+// Purement statique : aucun state, aucun useCart(). Un composant qui
+// n'a pas besoin du panier n'a pas à le connaître.
 export function Header() {
   return (
     <header className="border-b border-slate-200 bg-white px-6 py-4">

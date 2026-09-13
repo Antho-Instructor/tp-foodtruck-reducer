@@ -6,6 +6,9 @@ import { HappyHourToggle } from "./HappyHourToggle";
 
 export function CartPanel() {
   const { state, dispatch } = useCart();
+  // subtotal/discountAmount/total sont recalculés à CHAQUE render à partir
+  // de state.lines/discountPercent/happyHour : rien de tout ça n'est stocké
+  // dans le state lui-même (voir la remarque dans types.ts).
   const subtotal = getSubtotal(state);
   const discountAmount = getDiscountAmount(state);
   const total = getTotal(state);

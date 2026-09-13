@@ -4,6 +4,9 @@ import { getLinePrice } from "../reducer/cartSelectors";
 
 export function CartLineRow({ line }: { line: CartLine }) {
   const { state, dispatch } = useCart();
+  // getLinePrice a besoin de state.happyHour (pas seulement de `line`) car
+  // la remise happy hour ne s'applique qu'aux boissons : le prix d'une
+  // ligne dépend donc à la fois de la ligne ET d'un flag global du panier.
   const linePrice = getLinePrice(line, state.happyHour);
 
   return (

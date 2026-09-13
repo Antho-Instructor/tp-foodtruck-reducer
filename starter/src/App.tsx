@@ -5,6 +5,9 @@ import { CartPanel } from "./components/CartPanel";
 
 function App() {
   return (
+    // CartProvider entoure tout l'arbre : ProductGrid et CartPanel peuvent
+    // donc appeler useCart() sans que le state/dispatch ne soit passé
+    // manuellement en props à chaque niveau (pas de "prop drilling").
     <CartProvider>
       <div className="min-h-screen bg-slate-50">
         <Header />

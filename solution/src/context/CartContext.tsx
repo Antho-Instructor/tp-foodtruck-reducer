@@ -9,7 +9,7 @@ interface CartContextValue {
 
 // On initialise le Context à `null` plutôt qu'à une fausse valeur par
 // défaut (un faux `dispatch` qui ne ferait rien, par exemple). Ça permet à
-// `useCart()` de détecter — et d'interdire clairement — un usage en dehors
+// `useCart()` de détecter - et d'interdire clairement - un usage en dehors
 // du <CartProvider>, au lieu de laisser un bug silencieux se produire.
 const CartContext = createContext<CartContextValue | null>(null);
 

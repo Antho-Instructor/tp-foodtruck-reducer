@@ -9,7 +9,7 @@ export const initialCartState: CartState = {
 };
 
 // ----------------------------------------------------------------------------
-// 🔧 TODO 2 — Le reducer
+// 🔧 TODO 2 : Le reducer
 // ----------------------------------------------------------------------------
 // Complète chaque `case` ci-dessous. Rappelle-toi les 3 règles d'un reducer
 // (détaillées dans le README) :

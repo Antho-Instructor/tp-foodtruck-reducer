@@ -1,4 +1,4 @@
-# 🚚 Le Foodtruck Ynov — workshop `useReducer`
+# 🚚 Le Foodtruck Ynov : workshop `useReducer`
 
 TP **solo** pour mettre en pratique `useReducer` sur un cas différent du
 compteur ou du switch de thème vus en cours : la gestion du **panier de
@@ -7,7 +7,7 @@ commande** d'un foodtruck.
 Objectif : à la fin, tu dois être capable d'écrire un reducer avec
 **plusieurs actions métier qui interagissent entre elles**, de le **typer**
 correctement avec TypeScript, et de le **combiner avec Context** pour en
-faire un petit store global — sans aucune librairie externe.
+faire un petit store global - sans aucune librairie externe.
 
 ---
 
@@ -42,7 +42,7 @@ même endroit : impossible d'oublier une transition, parce que
 | **Reducer**                  | Une fonction **pure** `(state, action) => nouvel état`. Jamais de fetch/setTimeout dedans. |
 | **Immutabilité**              | Chaque `case` retourne un **nouvel** objet/tableau, on ne modifie jamais `state` en place. |
 | **`dispatch`**                | La seule façon d'envoyer une action au reducer : `dispatch({ type: "..." })`.              |
-| **Union discriminée**         | `type Action = { type: "A" } \| { type: "B"; payload: X }` — le champ `type` dit à TypeScript quelle forme a l'action. |
+| **Union discriminée**         | `type Action = { type: "A" } \| { type: "B"; payload: X }` : le champ `type` dit à TypeScript quelle forme a l'action. |
 | **`useReducer` + `Context`**  | Le Context rend `state`/`dispatch` accessibles partout ; `useReducer` centralise leur logique de mise à jour. Un mini store, sans Redux. |
 
 Si un de ces points est flou, rouvre le support de cours `useReducer.pdf`
@@ -76,7 +76,7 @@ npm run dev
 
 Ouvre `http://localhost:5173`. Tu dois voir : la liste des produits à
 gauche, un panier vide à droite. **C'est normal que rien ne fonctionne
-encore** — tu vas le construire.
+encore** - tu vas le construire.
 
 > ⚠️ Tant que le TODO 3 (Context) n'est pas fait, l'appli affiche une erreur
 > React au chargement (`useCart() doit être appelé à l'intérieur d'un
@@ -115,7 +115,7 @@ Remarque importante : **le total n'est PAS dans `CartState`**. Il se
 calcule à partir du reste (voir `starter/src/reducer/cartSelectors.ts`,
 déjà fourni et fonctionnel). Si le total était stocké dans le state, il
 faudrait le recalculer à la main dans chaque `case` du reducer qui touche
-au panier — un oubli, et le total affiché mentirait. En le calculant à la
+au panier - un oubli, et le total affiché mentirait. En le calculant à la
 demande, il est toujours juste.
 
 Tout le reste (catalogue de produits, composants d'affichage, formulaire
@@ -124,7 +124,7 @@ travail se concentre sur **3 fichiers**, dans cet ordre :
 
 ---
 
-## 🔹 TODO 1 · `src/types.ts` — typer les actions
+## 🔹 TODO 1 · `src/types.ts` : typer les actions
 
 **~15 minutes**
 
@@ -143,7 +143,7 @@ never;` actuel) :
 | `"RESET_CART"`         | *(aucun)*                       | bouton "Vider le panier"                 |
 
 <details markdown="1">
-<summary>▸ Indice — la syntaxe d'une union discriminée</summary>
+<summary>▸ Indice : la syntaxe d'une union discriminée</summary>
 
 Rappelle-toi l'exemple du compteur vu en cours :
 
@@ -167,7 +167,7 @@ et `CartContext.tsx` : normal, ce sont les TODOs suivants.
 
 ---
 
-## 🔹 TODO 2 · `src/reducer/cartReducer.ts` — écrire le reducer
+## 🔹 TODO 2 · `src/reducer/cartReducer.ts` : écrire le reducer
 
 **~30 minutes**, le cœur de l'exercice.
 
@@ -176,12 +176,12 @@ Le squelette est là : une fonction `cartReducer(state, action)` avec un
 des 7 actions. Trois règles à respecter partout (déjà rappelées en
 commentaire dans le fichier) :
 
-1. **Fonction pure** — pas de `fetch`, pas de `Math.random()`, pas de
+1. **Fonction pure** : pas de `fetch`, pas de `Math.random()`, pas de
    mutation d'une variable extérieure au reducer.
-2. **Immutabilité** — jamais `state.lines.push(...)` ni
+2. **Immutabilité** : jamais `state.lines.push(...)` ni
    `line.quantity++`. Toujours `{ ...state, ... }`, `.map()`, `.filter()`,
    `[...state.lines, nouvelleLigne]`.
-3. **Action invalide → état inchangé** — un code promo qui n'existe pas
+3. **Action invalide → état inchangé** : un code promo qui n'existe pas
    dans `DISCOUNT_CODES` ne doit RIEN changer, pas planter.
 
 <details markdown="1">
@@ -228,7 +228,7 @@ n'affiche rien (et ne fait pas planter la page).
 
 ---
 
-## 🔹 TODO 3 · `src/context/CartContext.tsx` — brancher useReducer + Context
+## 🔹 TODO 3 · `src/context/CartContext.tsx` : brancher useReducer + Context
 
 **~15 minutes**
 
@@ -241,7 +241,7 @@ Dans `CartProvider` :
    `return <CartContext.Provider value={{ state, dispatch }}>{children}</CartContext.Provider>;`
 
 Le hook `useCart()` en bas du fichier est **déjà fourni** : tu n'as rien à
-y changer. Regarde-le quand même — il illustre un pattern utile (lever une
+y changer. Regarde-le quand même - il illustre un pattern utile (lever une
 erreur explicite si le Context est `null`, plutôt que planter plus loin
 avec un message obscur).
 
@@ -287,7 +287,7 @@ Aucun n'est noté, à faire uniquement par curiosité :
   qui met à jour `document.title` avec le total du panier.
 - **Historique des actions** : garde un tableau des 5 dernières actions
   dispatchées (dans un state séparé, ou un second reducer) et affiche-le
-  pour déboguer — c'est le principe de base des devtools Redux.
+  pour déboguer - c'est le principe de base des devtools Redux.
 
 ---
 
@@ -299,9 +299,9 @@ bien tout couvert avant de comparer avec `solution/`.
 | Ce qu'on regarde                                                          | Points  |
 | --------------------------------------------------------------------------| :-----: |
 | `npm run dev` démarre, `node_modules` non commité                        |    2    |
-| **TODO 1** — union discriminée complète et correctement typée            |    4    |
-| **TODO 2** — les 7 actions du reducer fonctionnent, state jamais muté    |    8    |
-| **TODO 3** — Context + hook `useCart` fonctionnels                       |    4    |
+| **TODO 1** : union discriminée complète et correctement typée            |    4    |
+| **TODO 2** : les 7 actions du reducer fonctionnent, state jamais muté    |    8    |
+| **TODO 3** : Context + hook `useCart` fonctionnels                       |    4    |
 | **Scénario de validation** passe en entier                               |    2    |
 | **Total**                                                                 | **/20** |
 
@@ -317,5 +317,5 @@ Reformule pour toi-même, sans regarder le code :
 - pourquoi le total n'est pas stocké dans `CartState` ;
 - ce que Context apporte à `useReducer`, et inversement.
 
-La solution complète et commentée est dans `solution/` — ne l'ouvre
+La solution complète et commentée est dans `solution/` - ne l'ouvre
 qu'après avoir fini (ou vraiment bloqué plus de 15 minutes sur un TODO).

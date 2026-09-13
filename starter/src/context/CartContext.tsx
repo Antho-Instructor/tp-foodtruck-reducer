@@ -14,7 +14,7 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 // ----------------------------------------------------------------------------
-// 🔧 TODO 3 — useReducer + Context
+// 🔧 TODO 3 : useReducer + Context
 // ----------------------------------------------------------------------------
 // C'est ici que useReducer et Context se rejoignent : useReducer centralise
 // la LOGIQUE de mise à jour (le reducer que tu as écrit au TODO 2), Context

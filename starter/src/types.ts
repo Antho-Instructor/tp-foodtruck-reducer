@@ -38,7 +38,7 @@ export interface CartState {
 }
 
 // ----------------------------------------------------------------------------
-// 🔧 TODO 1 — Type des actions (union discriminée)
+// 🔧 TODO 1 : Type des actions (union discriminée)
 // ----------------------------------------------------------------------------
 // Remplace `CartAction` ci-dessous par une UNION DISCRIMINÉE qui modélise
 // les 7 actions possibles sur le panier. Chaque variante doit avoir un
